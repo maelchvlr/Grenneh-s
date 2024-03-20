@@ -1,0 +1,23 @@
+<sounds root="sfx/">
+    <sound name="Fartmod">
+        <sample weight="1" path="Fartmod1.wav"/>
+        <sample weight="1" path="Fartmod2.wav"/>
+        <sample weight="1" path="Fartmod3.wav"/>
+        <sample weight="1" path="Fartmod4.wav"/>
+        <sample weight="1" path="Fartmod5.wav"/>
+        <sample weight="1" path="Fartmod6.wav"/>
+    </sound>
+
+    <sound name="SkillIssue">
+        <sample weight="1" path="SkillIssue1.wav"/>
+        <sample weight="1" path="SkillIssue2.wav"/>
+        <sample weight="1" path="SkillIssue3.wav"/>
+        <sample weight="1" path="SkillIssue4.wav"/>
+        <sample weight="1" path="SkillIssue5.wav"/>
+        <sample weight="1" path="SkillIssue6.wav"/>
+    </sound>
+
+    <sound name="GrennehHit">
+        <sample weight="1" path="GrennehHit.wav"/>
+    </sound>
+</sounds>

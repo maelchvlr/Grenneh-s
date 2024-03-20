@@ -1,0 +1,45 @@
+<ItemPools>
+    <Pool Name="treasure">
+        <Item Name="Mimine" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="BMTH !" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Gaming Chair" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Tatanosaurus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="A Bo'oh'o'wa'er" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Redbull" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grenneh's bean" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Head of Kramptus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+
+    <Pool Name="shop">
+        <Item Name="Mimine" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="BMTH !" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Gaming Chair" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Tatanosaurus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="A Bo'oh'o'wa'er" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Redbull" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grenneh's bean" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Head of Kramptus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+
+    <Pool Name="boss">
+        <Item Name="Mimine" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="BMTH !" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Gaming Chair" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Tatanosaurus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="A Bo'oh'o'wa'er" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Redbull" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grenneh's bean" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Head of Kramptus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+
+    <Pool Name="goldenchest">
+        <Item Name="Mimine" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="BMTH !" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Gaming Chair" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Tatanosaurus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="A Bo'oh'o'wa'er" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Redbull" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grenneh's bean" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Head of Kramptus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+</ItemPools>

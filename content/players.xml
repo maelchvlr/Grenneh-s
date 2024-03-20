@@ -1,0 +1,23 @@
+<players root="gfx/characters/costumes/" portraitroot="gfx/ui/stage/" nameimageroot="gfx/ui/boss/">
+    <player name="Grenneh"
+        skin="character_grenneh.png"
+        nameimage="playername_grenneh.png"
+        hp="2"
+        armor="1"
+        keys="0"
+        bombs="0"
+        coins="30"
+        portrait="playerportrait_grenneh.png"
+        skinColor="-1"
+    />
+
+    <player name="Grenneh" 
+    bSkinParent="Grenneh"
+    skin="character_grenneh.png"
+    skinColor="-1"
+    nameimage="playername_grenneh.png"
+    portrait="playerportrait_grenneh.png"
+    hp="4" 
+    />
+
+</players>

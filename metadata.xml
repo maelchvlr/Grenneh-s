@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <name>Grenneh's</name>
+    <directory>grenneh's</directory>
+    <id>3114706443</id>
+    <description>Béta du mog Grenneh's, fais pour le streamer du même nom, au programme deux personnages (pas finis), 8 items, et une pillule, grand merci aux viewers pour leur participation, à Tatanosaurus pour les sprites, et à @leeloogee sur twitch pour le spirte de Tatano.</description>
+    <version>1.8</version>
+    <visibility>Public</visibility>
+    <tag id="Lua"/>
+    <tag id="Items"/>
+    <tag id="Player Characters"/>
+</metadata>
