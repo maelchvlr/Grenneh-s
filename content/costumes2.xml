@@ -2,5 +2,7 @@
 
     <costume anm2path="grenneh_hair.anm2" type="none" priority="100" />
     <costume anm2path="grenneh_stoles.anm2" type="none" priority="100" />
+    <costume anm2path="grennette_hair.anm2" type="none" priority="100" />
+    <costume anm2path="grennette_stoles.anm2" type="none" priority="100" />
 
 </costumes>

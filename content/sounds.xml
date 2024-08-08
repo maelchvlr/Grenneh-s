@@ -15,9 +15,25 @@
         <sample weight="1" path="SkillIssue4.wav"/>
         <sample weight="1" path="SkillIssue5.wav"/>
         <sample weight="1" path="SkillIssue6.wav"/>
+        <sample weight="1" path="SkillIssue7.wav"/>
+        <sample weight="1" path="SkillIssue8.wav"/>
+        <sample weight="1" path="SkillIssue9.wav"/>
     </sound>
 
     <sound name="GrennehHit">
         <sample weight="1" path="GrennehHit.wav"/>
+    </sound>
+
+    <sound name="Happening">
+        <sample weight="1" path="Happening1.wav"/>
+        <sample weight="1" path="Happening2.wav"/>
+        <sample weight="1" path="Happening3.wav"/>
+        <sample weight="1" path="Happening4.wav"/>
+        <sample weight="1" path="Happening5.wav"/>
+        <sample weight="1" path="Happening6.wav"/>
+    </sound>
+
+    <sound name="MoonPillSound">
+        <sample weight="1" path="CelebrationDeLaLune.wav"/>
     </sound>
 </sounds>

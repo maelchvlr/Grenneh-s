@@ -11,12 +11,12 @@
         skinColor="-1"
     />
 
-    <player name="Grenneh" 
+    <player name="Grennette" 
     bSkinParent="Grenneh"
-    skin="character_grenneh.png"
+    skin="character_grennette.png"
     skinColor="-1"
-    nameimage="playername_grenneh.png"
-    portrait="playerportrait_grenneh.png"
+    nameimage="playername_grennette.png"
+    portrait="playerportrait_grennette.png"
     hp="4" 
     />
 

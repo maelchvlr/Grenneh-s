@@ -3,8 +3,8 @@
     <name>Grenneh's</name>
     <directory>grenneh's</directory>
     <id>3114706443</id>
-    <description>Béta du mog Grenneh's, fais pour le streamer du même nom, au programme deux personnages (pas finis), 8 items, et une pillule, grand merci aux viewers pour leur participation, à Tatanosaurus pour les sprites, et à @leeloogee sur twitch pour le spirte de Tatano.</description>
-    <version>1.8</version>
+    <description>Béta du mod Grenneh's, fais pour le streamer du même nom, au programme deux personnages (pas finis), beaucoup d'items, et 2 pillules, grand merci aux viewers pour leur participation, à Tatanosaurus pour les sprites, et à @leeloogee sur twitch pour le sprite de Tatano.</description>
+    <version>1.16</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>

@@ -1,12 +1,22 @@
 <items gfxroot="gfx/items/" version="1">
+
+    <!-- items v0.1 -->
+
     <passive id="1" name="Mimine" gfx="mimine.png" description="meow meow" quality="3" cache="luck"/>
     <passive id="2" name="BMTH !" gfx="bmth.png" description="Can you feel my heart ?" quality="4" cache="damage tearcolor"/>
     <passive id="3" name="Gaming Chair" gfx="gamingchair.png" description="LA CHAISE" quality="1" cache="speed"/>
     <passive id="4" name="Tatanosaurus" gfx="tatano.png" description="Food bringer, stream enjoyer" quality="2" cache="HP up"/>
     <passive id="5" name="A Bo'oh'o'wa'er" gfx="bottlewater.png" description="50 G-COINS pour ça hein..." quality="1" cache="firedelay"/>
-    <passive id="6" name="Redbull" gfx="redbull.png" description="j'arrete quand je veux" quality="0" cache="speed"/>
+    <passive id="6" name="Redbull" gfx="redbull.png" description="j'arrete quand je veux" quality="3" cache="speed flying"/>
     <active id="7" name="Grenneh's bean" description="ahah, hein ?" gfx="grennehbean.png" maxcharges="0" quality="0"/>
     <active id="8" name="Head of Kramptus" description="attends, c'était quoi l'objet ?" gfx="kramptus.png" maxcharges="3" quality="2"/>
+
+    <!-- items v0.2 -->
+
+    <passive id="9" name="Monster" gfx="Monster.png" description="Redbull, en plus cool B)" quality="3" cache="speed damage firedelay"/>
+    <active id="10" name="Choix du Chat" description="Allez hop, VOUS choisissez !" gfx="chatchoix.png" maxcharges="2" quality="2"/>
+    <passive id="11" name="Grennette's Mascara" gfx="grennetteMascara.png" description="slaaayyyy" quality="4" cache="luck damage firedelay"/>
+    <active id="12" name="La Contemplation" gfx="contemplation.png" description="Tout chose a un prix..." quality="2" maxcharges = "5"/>
 
 
 
