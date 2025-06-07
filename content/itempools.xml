@@ -9,11 +9,15 @@
         <Item Name="Grenneh's bean" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Monster" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Choix du Chat" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Mascara" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="La Contemplation" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Wig" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Whippin" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Tucker" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
 
     <Pool Name="shop">
         <Item Name="Mimine" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-        <Item Name="BMTH !" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Gaming Chair" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Tatanosaurus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="A Bo'oh'o'wa'er" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -21,18 +25,24 @@
         <Item Name="Grenneh's bean" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Monster" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Choix du Chat" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Mascara" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="La Contemplation" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Wig" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Whippin" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Tucker" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
 
     <Pool Name="boss">
         <Item Name="Mimine" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-        <Item Name="BMTH !" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Gaming Chair" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Tatanosaurus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="A Bo'oh'o'wa'er" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Redbull" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Grenneh's bean" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Monster" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-        <Item Name="Choix du Chat" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Mascara" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="La Contemplation" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Wig" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
 
     <Pool Name="goldenchest">
@@ -45,10 +55,21 @@
         <Item Name="Grenneh's bean" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Monster" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Choix du Chat" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Mascara" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="La Contemplation" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Wig" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Whippin" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grennette's Tucker" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
 
     <Pool Name="devil">
         <Item Name="Head of Kramptus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Iten Name="BMTH !" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Grenneh's Cursed Orb" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+
+    <Pool Name="angel">
+        <Item Name="Grenneh's Cursed Orb" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
 
 </ItemPools>

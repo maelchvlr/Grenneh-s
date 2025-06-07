@@ -36,4 +36,12 @@
     <sound name="MoonPillSound">
         <sample weight="1" path="CelebrationDeLaLune.wav"/>
     </sound>
+
+    <sound name="uwu">
+        <sample weight="1" path="uwu.wav"/>
+    </sound>
+
+    <sound name="transfoSound">
+        <sample weight="1" path="trueform.wav"/>
+    </sound>
 </sounds>
