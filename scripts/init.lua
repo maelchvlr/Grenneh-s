@@ -1,8 +1,21 @@
+-- File dedicated to all the initialization that isn't specific to a single entity
 -- #region Grenneh Init
+
 Grenneh.game = Game()
 Grenneh.sound = SFXManager()
 
---#endregion
+-- #endregion
+-- #region initSafeCall
+
+-- Safely execute a function and catch any errors
+local function InitSafeCall(func, ...)
+    local success, err = pcall(func, ...)
+    if not success then
+        Isaac.ConsoleOutput("Error in Grenneh : " .. tostring(err) .. "\n")
+    end
+end
+
+-- #endregion
 -- #region Init Characters
 
 -- Storage of tainted & untainted version of the character in Grenneh mod
@@ -42,5 +55,10 @@ function Grenneh:GiveCostumesOnInit(player)
         return -- Only give costumes to Grennette
     end
 end
-Grenneh:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, Grenneh.GiveCostumesOnInit)
+
+function Grenneh:GiveCostumesOnInitSafe(player)
+    InitSafeCall(Grenneh.GiveCostumesOnInit, Grenneh, player)
+end
+
+Grenneh:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, Grenneh.GiveCostumesOnInitSafe)
 --#endregion

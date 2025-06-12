@@ -1,70 +1,16 @@
 -- Register the mod as a global variable
 Grenneh = RegisterMod("Grenneh Mod", 1)
 
+local TATANOHEALED = false
+local WIGON = false
+--local HAS_SIXTH_PICKUP = false  -- Track if the player has survived the sixth pickup
+--local WINGS_ON = false
+
 include("scripts/verification")
 include("scripts/init")
 include("scripts/pills")
 
 include("scripts/grenneh")
-
--- #region Grenneh Section
-
-local tatanoHealed = false
-local hasSixthPickup = false  -- Track if the player has survived the sixth pickup
-local wigOn = false
-local wingsOn = false
-
-function Grenneh:OnPlayerInit(player)
-    tatanoHealed = false
-    hasSixthPickup = false
-    wigOn = false
-    wingsOn = false
-
-    if player:GetPlayerType() == Grenneh.grennehType then
-
-        if not player:HasCollectible(Isaac.GetItemIdByName("Mimine")) then
-            player:AddCollectible(Isaac.GetItemIdByName("Mimine"))
-            -- Add any additional initialization here
-        end
-        if not player:HasCollectible(Isaac.GetItemIdByName("Grenneh's bean")) then
-            player:AddCollectible(Isaac.GetItemIdByName("Grenneh's bean"))
-            -- Add any additional initialization here
-        end
-    end
-    if player:GetPlayerType() == Grenneh.grennetteType then
-        if not player:HasCollectible(Isaac.GetItemIdByName("Head of Kramptus")) then
-            player:AddCollectible(Isaac.GetItemIdByName("Head of Kramptus"))
-            -- Add any additional initialization here
-        end
-    end
-end
-
-Grenneh:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, Grenneh.OnPlayerInit)
-
-local hitSound = Isaac.GetSoundIdByName("GrennehHit")
-
-function Grenneh:damage()
-    if Isaac.GetPlayer(0):GetPlayerType() == Grenneh.grennehType then
-        local pitch = math.random(80,120)/100
-        Grenneh.sound:Play(hitSound,2.0,0, false, pitch)
-    end
-end
-
-
-function Grenneh:db()
-    if Isaac.GetPlayer(0):GetPlayerType() == Grenneh.grennehType then
-        if (Grenneh.sound:IsPlaying(SoundEffect.SOUND_ISAAC_HURT_GRUNT)) then
-            Grenneh.sound:Stop(SoundEffect.SOUND_ISAAC_HURT_GRUNT);
-        end
-    end
-end
-
-
-
-Grenneh:AddCallback(ModCallbacks.MC_POST_UPDATE, Grenneh.db)
-Grenneh:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Grenneh.damage, EntityType.ENTITY_PLAYER)
-
--- #endregion
 
 
 -- #region Mimine
@@ -285,10 +231,10 @@ function Grenneh:updateTatano()
 
 	if (player:HasCollectible(tatano)) then
 
-		if not tatanoHealed then
+		if not TATANOHEALED then
             player:AddMaxHearts(4,false)
             player:AddHearts(4)
-            tatanoHealed = true
+            TATANOHEALED = true
         end
 	end
 end
@@ -351,6 +297,9 @@ Grenneh:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Grenneh.EvaluateRedbull)
 
 --------------------------------------------------------------------------------------------------------------
 -- Monster
+
+-- Create it's own class in a item class
+
 local monsterItemId = Isaac.GetItemIdByName("Monster")
 local monsterDamageMultiplier = 1.2
 local monsterSpeedMultiplier = 0.1
@@ -977,6 +926,7 @@ end
 
 -- Callback to stop the default grunt sound when taking damage
 function Grenneh:StopDefaultGrunt()
+    local hitSound = Isaac.GetSoundIdByName("GrennehHit")
     local player = Isaac.GetPlayer(0)
     if not player or not player:Exists() then return end  -- Ensure player exists
 
@@ -1005,9 +955,9 @@ end
 function Grenneh:PutWigOn(player)
     if not player or not player:Exists() then return end  -- Ensure player exists
 
-    if player:HasCollectible(grennettesWig) and not wigOn then
+    if player:HasCollectible(grennettesWig) and not WIGON then
         player:AddNullCostume(grennettewigCostume)
-        wigOn = true
+        WIGON = true
     end
 end
 
@@ -1381,18 +1331,6 @@ Grenneh:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, entity, amount,
         Grenneh:OnTuckerPlayerDamage(entity, amount, flags, source, countdown)
     end
 end)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 -- Define the Grennette items required for the transformation
