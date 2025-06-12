@@ -1,104 +1,26 @@
-local MyMod = RegisterMod("Grenneh Mod", 1)
+-- Register the mod as a global variable
+Grenneh = RegisterMod("Grenneh Mod", 1)
 
-local grennehType = Isaac.GetPlayerTypeByName("Grenneh", false)
-local grennetteType = Isaac.GetPlayerTypeByName("Grennette", true)
+include("scripts/verification")
+include("scripts/init")
+include("scripts/pills")
 
+include("scripts/grenneh")
 
-
-local grennehHairCostume = Isaac.GetCostumeIdByPath("gfx/characters/grenneh_hair.anm2") 
-local grennehstolesCostume = Isaac.GetCostumeIdByPath("gfx/characters/grenneh_stoles.anm2") 
-local grennetteHairCostume = Isaac.GetCostumeIdByPath("gfx/characters/grennette_hair.anm2") 
-local grennettestolesCostume = Isaac.GetCostumeIdByPath("gfx/characters/grennette_stoles.anm2") 
-local grennettewigCostume = Isaac.GetCostumeIdByPath("gfx/characters/grennette_wig.anm2") 
-local redbullWingCostume = Isaac.GetCostumeIdByPath("gfx/characters/redbull_wings.anm2")
-
-
-local skillIssue = Isaac.GetSoundIdByName("SkillIssue")
-
-local SkillIssue= {
-    ID = Isaac.GetPillEffectByName("Skill Issue"),
-
-}
-
-SkillIssue.Color = Isaac.AddPillEffectToPool(SkillIssue.ID)
-
-function MyMod:GiveCostumesOnInit(player)
-    if player:GetPlayerType() == grennehType then
-        player:AddNullCostume(grennehHairCostume)
-        player:AddNullCostume(grennehstolesCostume)
-        return -- Only give costumes to Grenneh
-    elseif player:GetPlayerType() == grennetteType then
-        player:AddNullCostume(grennehHairCostume)
-        player:AddNullCostume(grennehstolesCostume)
-        return -- Only give costumes to Grennette
-    end
-
-
-end
-
-MyMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, MyMod.GiveCostumesOnInit)
-
-
--- Function to check if an item is a key item
-function MyMod:IsKeyItem(itemID)
-    local KeyItem = {
-        CollectibleType.COLLECTIBLE_POLAROID,
-        CollectibleType.COLLECTIBLE_NEGATIVE,
-        CollectibleType.COLLECTIBLE_KEY_PIECE_1,
-        CollectibleType.COLLECTIBLE_KEY_PIECE_2,
-        CollectibleType.COLLECTIBLE_DADS_NOTE,
-        CollectibleType.COLLECTIBLE_KNIFE_PIECE_1,
-        CollectibleType.COLLECTIBLE_KNIFE_PIECE_2
-    }
-    
-    -- Check if the itemID is in the KeyItem list
-    for _, keyItem in ipairs(KeyItem) do
-        if itemID == keyItem then
-            return true
-        end
-    end
-    return false
-end
-
---------------------------------------------------------------------------------------------------
--- Gestion Grenneh
-
-local game = Game() -- Grabbing game
-local sound = SFXManager()
-local music = MusicManager()
-
-
-function MyMod:HandleStartingStats(player, flag)
-    if player:GetPlayerType() == grennehType then
-        if flag == CacheFlag.CACHE_DAMAGE then
-            -- Cap damage at 5
-            player.Damage = player.Damage * 0.3
-        end
-
-        if flag == CacheFlag.CACHE_FIREDELAY then
-            -- Uncap delay
-            
-            player.MaxFireDelay = player.MaxFireDelay * 0.15
-
-
-        end
-    end
-end
-
-MyMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, MyMod.HandleStartingStats)
+-- #region Grenneh Section
 
 local tatanoHealed = false
 local hasSixthPickup = false  -- Track if the player has survived the sixth pickup
 local wigOn = false
 local wingsOn = false
 
-function MyMod:OnPlayerInit(player)
+function Grenneh:OnPlayerInit(player)
     tatanoHealed = false
     hasSixthPickup = false
     wigOn = false
     wingsOn = false
 
-    if player:GetPlayerType() == Isaac.GetPlayerTypeByName("Grenneh") then
+    if player:GetPlayerType() == Grenneh.grennehType then
 
         if not player:HasCollectible(Isaac.GetItemIdByName("Mimine")) then
             player:AddCollectible(Isaac.GetItemIdByName("Mimine"))
@@ -109,7 +31,7 @@ function MyMod:OnPlayerInit(player)
             -- Add any additional initialization here
         end
     end
-    if player:GetPlayerType() == grennetteType then
+    if player:GetPlayerType() == Grenneh.grennetteType then
         if not player:HasCollectible(Isaac.GetItemIdByName("Head of Kramptus")) then
             player:AddCollectible(Isaac.GetItemIdByName("Head of Kramptus"))
             -- Add any additional initialization here
@@ -117,34 +39,35 @@ function MyMod:OnPlayerInit(player)
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, MyMod.OnPlayerInit)
+Grenneh:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, Grenneh.OnPlayerInit)
 
 local hitSound = Isaac.GetSoundIdByName("GrennehHit")
 
-function MyMod:damage()
-    if Isaac.GetPlayer(0):GetPlayerType() == Isaac.GetPlayerTypeByName("Grenneh") then
+function Grenneh:damage()
+    if Isaac.GetPlayer(0):GetPlayerType() == Grenneh.grennehType then
         local pitch = math.random(80,120)/100
-        sound:Play(hitSound,2.0,0, false, pitch)
+        Grenneh.sound:Play(hitSound,2.0,0, false, pitch)
     end
 end
 
- 
-function MyMod:db()
-    if Isaac.GetPlayer(0):GetPlayerType() == Isaac.GetPlayerTypeByName("Grenneh") then
-        if (sound:IsPlaying(SoundEffect.SOUND_ISAAC_HURT_GRUNT)) then
-            sound:Stop(SoundEffect.SOUND_ISAAC_HURT_GRUNT);
+
+function Grenneh:db()
+    if Isaac.GetPlayer(0):GetPlayerType() == Grenneh.grennehType then
+        if (Grenneh.sound:IsPlaying(SoundEffect.SOUND_ISAAC_HURT_GRUNT)) then
+            Grenneh.sound:Stop(SoundEffect.SOUND_ISAAC_HURT_GRUNT);
         end
     end
 end
 
- 
-
-MyMod:AddCallback(ModCallbacks.MC_POST_UPDATE, MyMod.db)
-MyMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, MyMod.damage, EntityType.ENTITY_PLAYER)
 
 
----------------------------------------------------------------------------------------------------
--- Mimine
+Grenneh:AddCallback(ModCallbacks.MC_POST_UPDATE, Grenneh.db)
+Grenneh:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Grenneh.damage, EntityType.ENTITY_PLAYER)
+
+-- #endregion
+
+
+-- #region Mimine
 
 local mimineItemId = Isaac.GetItemIdByName("Mimine")
 local mimineLuckPerItem = 1
@@ -158,7 +81,7 @@ local function MimineSafeCall(func, ...)
 end
 
 -- Evaluate Mimine's luck bonus effect
-function MyMod:EvaluateMimineCache(player, cacheFlags)
+function Grenneh:EvaluateMimineCache(player, cacheFlags)
     if cacheFlags & CacheFlag.CACHE_LUCK == CacheFlag.CACHE_LUCK then
         local mimineItemCount = player:GetCollectibleNum(mimineItemId)
         local totalLuckToAdd = mimineLuckPerItem * mimineItemCount
@@ -167,11 +90,11 @@ function MyMod:EvaluateMimineCache(player, cacheFlags)
 end
 
 -- Wrapper for EvaluateMimineCache with SafeCall
-function MyMod:EvaluateMimineCacheSafe(player, cacheFlags)
-    MimineSafeCall(MyMod.EvaluateMimineCache, MyMod, player, cacheFlags)
+function Grenneh:EvaluateMimineCacheSafe(player, cacheFlags)
+    MimineSafeCall(Grenneh.EvaluateMimineCache, Grenneh, player, cacheFlags)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, MyMod.EvaluateMimineCacheSafe)
+Grenneh:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Grenneh.EvaluateMimineCacheSafe)
 
 -- List of all Guppy item IDs
 local guppyItemIds = {
@@ -182,7 +105,7 @@ local guppyItemIds = {
 }
 
 -- Get a list of Guppy items that the player does not already have
-function MyMod:GetMimineAvailableGuppyItems(player)
+function Grenneh:GetMimineAvailableGuppyItems(player)
     local availableGuppyItems = {}
     for _, itemId in ipairs(guppyItemIds) do
         if not player:HasCollectible(itemId) then
@@ -193,16 +116,16 @@ function MyMod:GetMimineAvailableGuppyItems(player)
 end
 
 -- Handle Mimine's effect when entering a new room
-function MyMod:HandleMimineNewRoom()
+function Grenneh:HandleMimineNewRoom()
     local player = Isaac.GetPlayer(0)
-    local room = Game():GetRoom()
-    
+    local room = Grenneh.game:GetRoom()
+
     -- Check if the player has Mimine and if it's the first visit to the room
     if not player:HasCollectible(mimineItemId) or not room:IsFirstVisit() then
         return -- Do nothing if player doesn't have Mimine or room isn't visited for the first time
     end
 
-    local availableGuppyItems = MyMod:GetMimineAvailableGuppyItems(player)
+    local availableGuppyItems = Grenneh:GetMimineAvailableGuppyItems(player)
     if #availableGuppyItems == 0 then
         return -- Do nothing if all Guppy items are already collected
     end
@@ -224,38 +147,35 @@ function MyMod:HandleMimineNewRoom()
 end
 
 -- Wrapper for HandleMimineNewRoom with SafeCall
-function MyMod:HandleMimineNewRoomSafe()
-    MimineSafeCall(MyMod.HandleMimineNewRoom, MyMod)
+function Grenneh:HandleMimineNewRoomSafe()
+    MimineSafeCall(Grenneh.HandleMimineNewRoom, Grenneh)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, MyMod.HandleMimineNewRoomSafe)
+Grenneh:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Grenneh.HandleMimineNewRoomSafe)
 
+-- #endregion
 
---------------------------------------------------------------------------------------------------------------
--- Haricot pet
+-- #region Haricot pet
 
 local grennehBean = Isaac.GetItemIdByName("Grenneh's bean")
 local grennehBeanSound = Isaac.GetSoundIdByName("Fartmod")
 
-function MyMod:useGrennehBean(grennehBean, rng)
-    sound:Play(grennehBeanSound, 2, 0, false, 1)
+function Grenneh:useGrennehBean(grennehBean, rng)
+    Grenneh.sound:Play(grennehBeanSound, 2, 0, false, 1)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_USE_ITEM, MyMod.useGrennehBean, grennehBean)
+Grenneh:AddCallback(ModCallbacks.MC_USE_ITEM, Grenneh.useGrennehBean, grennehBean)
 
+-- #endregion
 
-
-
-
---------------------------------------------------------------------------------------------------------------
--- Kramptus
+-- #region Kramptus
 
 local kramptus = Isaac.GetItemIdByName("Head of Kramptus")
 
-function MyMod:useKramptus()
+function Grenneh:useKramptus()
     local player = Isaac.GetPlayer(0)
 
-    local hud = game:GetHUD()
+    local hud = Grenneh.game:GetHUD()
     -- setup message
     local message = "Eh, t'as les Kramptus ?"
 
@@ -266,10 +186,11 @@ function MyMod:useKramptus()
     player:RemoveCollectible(kramptus,false, ActiveSlot.SLOT_PRIMARY, true)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_USE_ITEM, MyMod.useKramptus, kramptus)
+Grenneh:AddCallback(ModCallbacks.MC_USE_ITEM, Grenneh.useKramptus, kramptus)
 
--------------------------------------------------------------------------------------------------------------
--- BMTH
+-- #endregion
+
+-- #region BMTH
 
 local bmthItemId = Isaac.GetItemIdByName("BMTH !")
 local bmthDamagePerItem = 2.5
@@ -283,7 +204,7 @@ local function BmthSafeCall(func, ...)
 end
 
 -- Evaluate BMTH! item effects on damage
-function MyMod:EvaluateBmthCache(player, cacheFlags)
+function Grenneh:EvaluateBmthCache(player, cacheFlags)
     if cacheFlags & CacheFlag.CACHE_DAMAGE == CacheFlag.CACHE_DAMAGE then
         local bmthItemCount = player:GetCollectibleNum(bmthItemId)
         local totalDamageToAdd = bmthDamagePerItem * bmthItemCount
@@ -292,14 +213,14 @@ function MyMod:EvaluateBmthCache(player, cacheFlags)
 end
 
 -- Wrapper for EvaluateBmthCache with SafeCall
-function MyMod:EvaluateBmthCacheSafe(player, cacheFlags)
-    BmthSafeCall(MyMod.EvaluateBmthCache, MyMod, player, cacheFlags)
+function Grenneh:EvaluateBmthCacheSafe(player, cacheFlags)
+    BmthSafeCall(Grenneh.EvaluateBmthCache, Grenneh, player, cacheFlags)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, MyMod.EvaluateBmthCacheSafe)
+Grenneh:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Grenneh.EvaluateBmthCacheSafe)
 
 -- Update BMTH! tear effects
-function MyMod:UpdateBmthTear(tear)
+function Grenneh:UpdateBmthTear(tear)
     local player = Isaac.GetPlayer(0)
     if player:HasCollectible(bmthItemId) then
         -- Change tear color to red
@@ -308,20 +229,20 @@ function MyMod:UpdateBmthTear(tear)
 end
 
 -- Wrapper for UpdateBmthTear with SafeCall
-function MyMod:UpdateBmthTearSafe(tear)
-    BmthSafeCall(MyMod.UpdateBmthTear, MyMod, tear)
+function Grenneh:UpdateBmthTearSafe(tear)
+    BmthSafeCall(Grenneh.UpdateBmthTear, Grenneh, tear)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, MyMod.UpdateBmthTearSafe)
+Grenneh:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, Grenneh.UpdateBmthTearSafe)
 
 -- Handle BMTH! blood trail effect
-function MyMod:HandleBmthBloodTrail(player)
+function Grenneh:HandleBmthBloodTrail(player)
     if not player:HasCollectible(bmthItemId) then
         return -- End the function early if the player doesn't have BMTH!
     end
 
     -- Every 4 frames, spawn a blood creep effect
-    if Game():GetFrameCount() % 4 == 0 then
+    if Grenneh.game:GetFrameCount() % 4 == 0 then
         local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, player.Position, Vector.Zero, player):ToEffect()
         creep.SpriteScale = Vector(0.5, 0.5) -- Make the creep smaller
         creep:Update() -- Update the creep to get rid of the initial red animation
@@ -329,19 +250,20 @@ function MyMod:HandleBmthBloodTrail(player)
 end
 
 -- Wrapper for HandleBmthBloodTrail with SafeCall
-function MyMod:HandleBmthBloodTrailSafe(player)
-    BmthSafeCall(MyMod.HandleBmthBloodTrail, MyMod, player)
+function Grenneh:HandleBmthBloodTrailSafe(player)
+    BmthSafeCall(Grenneh.HandleBmthBloodTrail, Grenneh, player)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, MyMod.HandleBmthBloodTrailSafe)
+Grenneh:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, Grenneh.HandleBmthBloodTrailSafe)
 
---------------------------------------------------------------------------------------------------------------
--- Chaise
+-- #endregion
+
+-- #region Chaise
 
 local chaise = Isaac.GetItemIdByName("Gaming Chair")
 local chaiseSpeed = 0.4
 
-function MyMod:EvaluateChair(player, cacheFlags)
+function Grenneh:EvaluateChair(player, cacheFlags)
     if cacheFlags & CacheFlag.CACHE_SPEED == CacheFlag.CACHE_SPEED then
         local itemCount = player:GetCollectibleNum(chaise);
         local spdToAdd = chaiseSpeed * itemCount
@@ -349,20 +271,20 @@ function MyMod:EvaluateChair(player, cacheFlags)
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, MyMod.EvaluateChair)
+Grenneh:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Grenneh.EvaluateChair)
 
+-- #endregion
 
---------------------------------------------------------------------------------------------------------------
--- Thatano
+-- #region Thatano
 
 local tatano = Isaac.GetItemIdByName("Tatanosaurus")
 
 
-function MyMod:updateTatano()
+function Grenneh:updateTatano()
 	local player = Isaac.GetPlayer(0);
 
 	if (player:HasCollectible(tatano)) then
-	
+
 		if not tatanoHealed then
             player:AddMaxHearts(4,false)
             player:AddHearts(4)
@@ -371,20 +293,20 @@ function MyMod:updateTatano()
 	end
 end
 
-MyMod:AddCallback( ModCallbacks.MC_POST_UPDATE, MyMod.updateTatano);
+Grenneh:AddCallback( ModCallbacks.MC_POST_UPDATE, Grenneh.updateTatano);
 
+-- #endregion
 
---------------------------------------------------------------------------------------------------------------
--- bouteille
+--#region bouteille
 
 local bouteille = Isaac.GetItemIdByName("A Bo'oh'o'wa'er")
 local bouteilleHeal = false
 
-function MyMod:updateBouteille()
+function Grenneh:updateBouteille()
 	local player = Isaac.GetPlayer(0);
 
 	if (player:HasCollectible(bouteille)) then
-	
+
 		if not bouteilleHeal then
             player:AddSoulHearts(2,false)
             player.MaxFireDelay = player.MaxFireDelay - 0.1
@@ -393,15 +315,16 @@ function MyMod:updateBouteille()
 	end
 end
 
-MyMod:AddCallback( ModCallbacks.MC_POST_UPDATE, MyMod.updateBouteille);
+Grenneh:AddCallback( ModCallbacks.MC_POST_UPDATE, Grenneh.updateBouteille);
 
---------------------------------------------------------------------------------------------------------------
--- redbull
+-- #endregion
+
+-- #region redbull
 
 local redbull = Isaac.GetItemIdByName("Redbull")
 local redbullSpeed = 2
 
-function MyMod:EvaluateRedbull(player, cacheFlags)
+function Grenneh:EvaluateRedbull(player, cacheFlags)
     local player = Isaac.GetPlayer(0)
     if cacheFlags & CacheFlag.CACHE_SPEED == CacheFlag.CACHE_SPEED then
         local itemCount = player:GetCollectibleNum(redbull)
@@ -416,18 +339,9 @@ function MyMod:EvaluateRedbull(player, cacheFlags)
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, MyMod.EvaluateRedbull)
+Grenneh:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Grenneh.EvaluateRedbull)
 
----------------------------------------------------------------------------------------------------------------------
--- Pillule
-
-function SkillIssue.Proc(_PillEffect)
-    local level = game:GetLevel()
-    level:SetRedHeartDamage()
-    sound:Play(skillIssue, 2, 0, false, 1)
-end
-
-MyMod:AddCallback(ModCallbacks.MC_USE_PILL, SkillIssue.Proc, SkillIssue.ID)
+-- #endregion
 
 
 
@@ -455,7 +369,7 @@ local function MonsterSafeCall(func, ...)
 end
 
 -- Evaluate Monster item effects on player stats
-function MyMod:EvaluateMonsterCache(player, cacheFlags)
+function Grenneh:EvaluateMonsterCache(player, cacheFlags)
     if not player or not player:Exists() then return end  -- Ensure player exists
 
     local itemCount = player:GetCollectibleNum(monsterItemId)
@@ -477,14 +391,14 @@ function MyMod:EvaluateMonsterCache(player, cacheFlags)
 end
 
 -- Wrapper for EvaluateMonsterCache with SafeCall
-function MyMod:EvaluateMonsterCacheSafe(player, cacheFlags)
-    MonsterSafeCall(MyMod.EvaluateMonsterCache, MyMod, player, cacheFlags)
+function Grenneh:EvaluateMonsterCacheSafe(player, cacheFlags)
+    MonsterSafeCall(Grenneh.EvaluateMonsterCache, Grenneh, player, cacheFlags)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, MyMod.EvaluateMonsterCacheSafe)
+Grenneh:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Grenneh.EvaluateMonsterCacheSafe)
 
 -- Update Monster tear effects
-function MyMod:UpdateMonsterTear(tear)
+function Grenneh:UpdateMonsterTear(tear)
     -- Ensure the tear exists before proceeding
     if not tear or not tear:Exists() or hasSixthPickup then
         return -- Exit the function early if the tear is invalid
@@ -506,14 +420,14 @@ function MyMod:UpdateMonsterTear(tear)
 end
 
 -- Wrapper for UpdateMonsterTear with SafeCall
-function MyMod:UpdateMonsterTearSafe(tear)
-    MonsterSafeCall(MyMod.UpdateMonsterTear, MyMod, tear)
+function Grenneh:UpdateMonsterTearSafe(tear)
+    MonsterSafeCall(Grenneh.UpdateMonsterTear, Grenneh, tear)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, MyMod.UpdateMonsterTearSafe)
+Grenneh:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, Grenneh.UpdateMonsterTearSafe)
 
 -- Handle the one-time effect when picking up the sixth Monster item
-function MyMod:HandleMonsterItemPickup(player)
+function Grenneh:HandleMonsterItemPickup(player)
     if not player or not player:Exists() then return end  -- Ensure player exists
 
     local itemCount = player:GetCollectibleNum(monsterItemId)
@@ -524,14 +438,14 @@ function MyMod:HandleMonsterItemPickup(player)
 end
 
 -- Wrapper for HandleMonsterItemPickup with SafeCall
-function MyMod:HandleMonsterItemPickupSafe(player)
-    MonsterSafeCall(MyMod.HandleMonsterItemPickup, MyMod, player)
+function Grenneh:HandleMonsterItemPickupSafe(player)
+    MonsterSafeCall(Grenneh.HandleMonsterItemPickup, Grenneh, player)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, MyMod.HandleMonsterItemPickupSafe)
+Grenneh:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, Grenneh.HandleMonsterItemPickupSafe)
 
 -- Update inverted controls if applicable
-function MyMod:UpdateMonsterInvertedControls()
+function Grenneh:UpdateMonsterInvertedControls()
     if hasSixthPickup then
         return -- Exit the function early if the sixth pickup has been obtained
     end
@@ -540,7 +454,7 @@ function MyMod:UpdateMonsterInvertedControls()
     if not player or not player:Exists() then return end  -- Ensure player exists
 
     if isInverted and inversionTimer > 0 then
-        MyMod:InvertMonsterControls(player)
+        Grenneh:InvertMonsterControls(player)
         inversionTimer = inversionTimer - 1
     elseif inversionTimer <= 0 then
         isInverted = false
@@ -548,7 +462,7 @@ function MyMod:UpdateMonsterInvertedControls()
 end
 
 -- Invert player controls
-function MyMod:InvertMonsterControls(player)
+function Grenneh:InvertMonsterControls(player)
     if not player or not player:Exists() then return end  -- Ensure player exists
 
     local moveInput = player:GetMovementInput()
@@ -561,18 +475,18 @@ function MyMod:InvertMonsterControls(player)
 end
 
 -- Wrapper for UpdateMonsterInvertedControls with SafeCall
-function MyMod:UpdateMonsterInvertedControlsSafe()
-    MonsterSafeCall(MyMod.UpdateMonsterInvertedControls, MyMod)
+function Grenneh:UpdateMonsterInvertedControlsSafe()
+    MonsterSafeCall(Grenneh.UpdateMonsterInvertedControls, Grenneh)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_UPDATE, MyMod.UpdateMonsterInvertedControlsSafe)
+Grenneh:AddCallback(ModCallbacks.MC_POST_UPDATE, Grenneh.UpdateMonsterInvertedControlsSafe)
 
 -- Handle effects when entering a new room
-function MyMod:HandleMonsterNewRoom()
+function Grenneh:HandleMonsterNewRoom()
     local player = Isaac.GetPlayer(0)
     if not player or not player:Exists() then return end  -- Ensure player exists
 
-    local currentRoomIndex = Game():GetLevel():GetCurrentRoomIndex()
+    local currentRoomIndex = Grenneh.game:GetLevel():GetCurrentRoomIndex()
     local itemCount = player:GetCollectibleNum(monsterItemId)
 
     if not visitedRooms[currentRoomIndex] then
@@ -602,14 +516,14 @@ function MyMod:HandleMonsterNewRoom()
 end
 
 -- Wrapper for HandleMonsterNewRoom with SafeCall
-function MyMod:HandleMonsterNewRoomSafe()
-    MonsterSafeCall(MyMod.HandleMonsterNewRoom, MyMod)
+function Grenneh:HandleMonsterNewRoomSafe()
+    MonsterSafeCall(Grenneh.HandleMonsterNewRoom, Grenneh)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, MyMod.HandleMonsterNewRoomSafe)
+Grenneh:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Grenneh.HandleMonsterNewRoomSafe)
 
 -- Handle potential reroll of any pickup into 'Monster'
-function MyMod:HandleMonsterPickupInit(pickup)
+function Grenneh:HandleMonsterPickupInit(pickup)
     if not pickup or not pickup:Exists() then return end  -- Ensure pickup exists
 
     local player = Isaac.GetPlayer(0)
@@ -617,24 +531,24 @@ function MyMod:HandleMonsterPickupInit(pickup)
 
     local itemCount = player:GetCollectibleNum(monsterItemId)
 
-    if pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE and pickup.SubType ~= monsterItemId and math.random() < (0.1 * itemCount) and not hasSixthPickup and not MyMod:IsKeyItem(pickup.SubType) then
+    if pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE and pickup.SubType ~= monsterItemId and math.random() < (0.1 * itemCount) and not hasSixthPickup and not Grenneh:IsKeyItem(pickup.SubType) then
         pickup:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, monsterItemId, true, true, false)
     end
 end
 
 -- Wrapper for HandleMonsterPickupInit with SafeCall
-function MyMod:HandleMonsterPickupInitSafe(pickup)
-    MonsterSafeCall(MyMod.HandleMonsterPickupInit, MyMod, pickup)
+function Grenneh:HandleMonsterPickupInitSafe(pickup)
+    MonsterSafeCall(Grenneh.HandleMonsterPickupInit, Grenneh, pickup)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, MyMod.HandleMonsterPickupInitSafe)
+Grenneh:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, Grenneh.HandleMonsterPickupInitSafe)
 
 -- reset hasSixthPickup when starting a new run
-function MyMod:MonsterReset()
+function Grenneh:MonsterReset()
     hasSixthPickup = false
-end 
+end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, MyMod.MonsterReset)
+Grenneh:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, Grenneh.MonsterReset)
 
 
 -------- Choix du Chat
@@ -643,7 +557,7 @@ local choixDuChat = Isaac.GetItemIdByName("Choix du Chat")
 local isInSpecialRoom = false
 
 -- When the item is used
-function MyMod:UseChoixDuChat()
+function Grenneh:UseChoixDuChat()
     local player = Isaac.GetPlayer(0)
     player:AnimateTeleport(true)
     Isaac.ExecuteCommand("goto s.default.7777")  -- Teleport to the custom room
@@ -651,38 +565,37 @@ function MyMod:UseChoixDuChat()
     isInSpecialRoom = true
 end
 
-MyMod:AddCallback(ModCallbacks.MC_USE_ITEM, MyMod.UseChoixDuChat, choixDuChat)
+Grenneh:AddCallback(ModCallbacks.MC_USE_ITEM, Grenneh.UseChoixDuChat, choixDuChat)
 
 -- Function to handle room entry
-function MyMod:ChoixNewRoom()
+function Grenneh:ChoixNewRoom()
     if isInSpecialRoom then
-        local game = Game()
-        local level = game:GetLevel()
+        local level = Grenneh.game:GetLevel()
         local roomDesc = level:GetCurrentRoomDesc()
-        game:GetHUD():ShowItemText("Chat, on prends quoi?", "")
+        Grenneh.game:GetHUD():ShowItemText("Chat, on prends quoi?", "")
         isInSpecialRoom = false  -- Reset flag
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, MyMod.ChoixNewRoom)
+Grenneh:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Grenneh.ChoixNewRoom)
 
 ----- happenings
 
 local happeningSounds = Isaac.GetSoundIdByName("Happening")
 
-function MyMod:PlayRandomSoundOnRoomEntry()
+function Grenneh:PlayRandomSoundOnRoomEntry()
     local player = Isaac.GetPlayer(0)
-    local room = Game():GetRoom()
-    
+    local room = Grenneh.game:GetRoom()
+
     if room:IsFirstVisit() then
         -- low% chance to play a sound
         if math.random(1, 1500) == 1 then
-            sound:Play(happeningSounds, 1.0, 0, false, 1.0)
+            Grenneh.sound:Play(happeningSounds, 1.0, 0, false, 1.0)
         end
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, MyMod.PlayRandomSoundOnRoomEntry)
+Grenneh:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Grenneh.PlayRandomSoundOnRoomEntry)
 
 ------- Grennette's Mascara
 
@@ -714,7 +627,7 @@ local function grennettesMascaraSafeCall(func, ...)
 end
 
 -- Evaluate Grennette's Mascara item effects
-function MyMod:EvaluateGrennettesMascaraCache(player, cacheFlag)
+function Grenneh:EvaluateGrennettesMascaraCache(player, cacheFlag)
     if not player or not player:Exists() then return end  -- Ensure player exists
 
     if player:HasCollectible(grennettesMascara) then
@@ -733,12 +646,12 @@ function MyMod:EvaluateGrennettesMascaraCache(player, cacheFlag)
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, player, cacheFlag)
-    grennettesMascaraSafeCall(MyMod.EvaluateGrennettesMascaraCache, MyMod, player, cacheFlag)
+Grenneh:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function(_, player, cacheFlag)
+    grennettesMascaraSafeCall(Grenneh.EvaluateGrennettesMascaraCache, Grenneh, player, cacheFlag)
 end)
 
 -- Update color transition for Grennette's Mascara tears
-function MyMod:UpdateGrennettesMascaraColorTransition()
+function Grenneh:UpdateGrennettesMascaraColorTransition()
     local player = Isaac.GetPlayer(0)
     if not player or not player:Exists() then return end  -- Ensure player exists
 
@@ -765,12 +678,12 @@ function MyMod:UpdateGrennettesMascaraColorTransition()
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
-    grennettesMascaraSafeCall(MyMod.UpdateGrennettesMascaraColorTransition, MyMod)
+Grenneh:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+    grennettesMascaraSafeCall(Grenneh.UpdateGrennettesMascaraColorTransition, Grenneh)
 end)
 
 -- Update Grennette's Mascara tear effects
-function MyMod:OnGrennettesMascaraTearUpdate(tear)
+function Grenneh:OnGrennettesMascaraTearUpdate(tear)
     -- Ensure the tear and player exist before proceeding
     if not tear or not tear:Exists() then return end
     local player = tear.Parent and tear.Parent:ToPlayer()
@@ -792,12 +705,12 @@ function MyMod:OnGrennettesMascaraTearUpdate(tear)
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, function(_, tear)
-    grennettesMascaraSafeCall(MyMod.OnGrennettesMascaraTearUpdate, MyMod, tear)
+Grenneh:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, function(_, tear)
+    grennettesMascaraSafeCall(Grenneh.OnGrennettesMascaraTearUpdate, Grenneh, tear)
 end)
 
 -- Handle Grennette's Mascara tear collision effects
-function MyMod:OnGrennettesMascaraTearCollision(tear, entity)
+function Grenneh:OnGrennettesMascaraTearCollision(tear, entity)
     -- Ensure the tear, player, and entity exist before proceeding
     if not tear or not tear:Exists() then return end
     local player = Isaac.GetPlayer(0)
@@ -809,8 +722,8 @@ function MyMod:OnGrennettesMascaraTearCollision(tear, entity)
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_PRE_TEAR_COLLISION, function(_, tear, entity)
-    grennettesMascaraSafeCall(MyMod.OnGrennettesMascaraTearCollision, MyMod, tear, entity)
+Grenneh:AddCallback(ModCallbacks.MC_PRE_TEAR_COLLISION, function(_, tear, entity)
+    grennettesMascaraSafeCall(Grenneh.OnGrennettesMascaraTearCollision, Grenneh, tear, entity)
 end)
 
 
@@ -828,18 +741,18 @@ local processedRooms = {}  -- Track rooms that have already been processed
 local tearRateIncreased = false  -- Track whether the tear rate increase has been applied
 
 -- Callback to handle using the Moon Pill
-function MyMod:UseMoonPill(pillEffect)
+function Grenneh:UseMoonPill(pillEffect)
     if pillEffect == moonPillEffect then
         moonPillActive = true
         floorEffectsActive = true
         local player = Isaac.GetPlayer(0)
-        local level = game:GetLevel()
+        local level = Grenneh.game:GetLevel()
 
         -- Apply Curse of the Blind
         level:AddCurse(LevelCurse.CURSE_OF_DARKNESS, false)
 
         -- Play custom sound
-        sound:Play(moonPillSound, 1.0, 0, false, 1.0)
+        Grenneh.sound:Play(moonPillSound, 1.0, 0, false, 1.0)
 
         -- Apply tear rate increase
         if not tearRateIncreased then
@@ -851,7 +764,7 @@ function MyMod:UseMoonPill(pillEffect)
 end
 
 -- Function to find a nearby position to place duplicates
-function MyMod:FindNearbyPosition(originalPosition)
+function Grenneh:FindNearbyPosition(originalPosition)
     local offsets = {
         Vector(40, 0),  -- Right
         Vector(-40, 0), -- Left
@@ -859,7 +772,7 @@ function MyMod:FindNearbyPosition(originalPosition)
         Vector(0, -40)  -- Up
     }
 
-    local room = Game():GetRoom()
+    local room = Grenneh.game:GetRoom()
 
     -- Try each offset to find a valid position
     for _, offset in ipairs(offsets) do
@@ -874,8 +787,8 @@ function MyMod:FindNearbyPosition(originalPosition)
 end
 
 -- Callback to handle doubling enemies and bosses in each room
-function MyMod:DoubleEnemiesInRooms()
-    local room = Game():GetRoom()
+function Grenneh:DoubleEnemiesInRooms()
+    local room = Grenneh.game:GetRoom()
     if floorEffectsActive and room:GetFrameCount() <= 1 then
         local entities = Isaac.GetRoomEntities()
         for _, entity in ipairs(entities) do
@@ -892,9 +805,9 @@ function MyMod:DoubleEnemiesInRooms()
 end
 
 -- Callback to handle doubling item drops in each room
-function MyMod:DoubleItemsInRooms()
-    local room = Game():GetRoom()
-    local itemPool = Game():GetItemPool()
+function Grenneh:DoubleItemsInRooms()
+    local room = Grenneh.game:GetRoom()
+    local itemPool = Grenneh.game:GetItemPool()
     if floorEffectsActive and room:GetFrameCount() <= 1 then
         local entities = Isaac.GetRoomEntities()
         for _, entity in ipairs(entities) do
@@ -931,8 +844,8 @@ function MyMod:DoubleItemsInRooms()
 end
 
 -- Callback to reset duplicated entities at the start of each room
-function MyMod:OnLuneNewRoom()
-    local room = Game():GetRoom()
+function Grenneh:OnLuneNewRoom()
+    local room = Grenneh.game:GetRoom()
     local roomIndex = room:GetDecorationSeed()
 
     -- Check if the room has already been processed for duplication
@@ -944,7 +857,7 @@ function MyMod:OnLuneNewRoom()
 end
 
 -- Callback to reset moonPillActive at the start of each level
-function MyMod:OnLuneNewLevel()
+function Grenneh:OnLuneNewLevel()
     local player = Isaac.GetPlayer(0)
 
     -- Decrease tear rate back to normal for the new level
@@ -962,7 +875,7 @@ function MyMod:OnLuneNewLevel()
 end
 
 -- Callback to adjust player's cache for tear rate
-function MyMod:EvaluateCache(player, cacheFlag)
+function Grenneh:EvaluateCache(player, cacheFlag)
     if cacheFlag == CacheFlag.CACHE_FIREDELAY then
         if floorEffectsActive then
             player.MaxFireDelay = player.MaxFireDelay * 0.6667 -- Apply 1.5x tear rate increase (2/3 of original delay)
@@ -971,10 +884,10 @@ function MyMod:EvaluateCache(player, cacheFlag)
 end
 
 -- Register callbacks
-MyMod:AddCallback(ModCallbacks.MC_USE_PILL, MyMod.UseMoonPill, moonPillEffect)
-MyMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, MyMod.OnLuneNewRoom)
-MyMod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, MyMod.OnLuneNewLevel)
-MyMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, MyMod.EvaluateCache)
+Grenneh:AddCallback(ModCallbacks.MC_USE_PILL, Grenneh.UseMoonPill, moonPillEffect)
+Grenneh:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Grenneh.OnLuneNewRoom)
+Grenneh:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Grenneh.OnLuneNewLevel)
+Grenneh:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Grenneh.EvaluateCache)
 
 
 ---- La Contemplation
@@ -983,7 +896,7 @@ MyMod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, MyMod.EvaluateCache)
 local LaContemplation = Isaac.GetItemIdByName("La Contemplation")
 
 -- Callback for using the item "La Contemplation"
-function MyMod:UseLaContemplation()
+function Grenneh:UseLaContemplation()
     local player = Isaac.GetPlayer(0)
 
     -- Create a table to hold all the player's collectible items
@@ -1015,7 +928,7 @@ function MyMod:UseLaContemplation()
 end
 
 -- Register the callback for using the item
-MyMod:AddCallback(ModCallbacks.MC_USE_ITEM, MyMod.UseLaContemplation, LaContemplation)
+Grenneh:AddCallback(ModCallbacks.MC_USE_ITEM, Grenneh.UseLaContemplation, LaContemplation)
 
 
 
@@ -1033,18 +946,18 @@ local function grennettesWigSafeCall(func, ...)
 end
 
 -- Callback when player takes damage
-function MyMod:OnPlayerDamage(entity, amount, flag, source, countdown)
+function Grenneh:OnPlayerDamage(entity, amount, flag, source, countdown)
     local player = entity:ToPlayer()
     if not player or not player:Exists() then return end  -- Ensure player exists
-    
+
     if player:HasCollectible(grennettesWig) then
         -- Play the custom "uwu sound" with a slight pitch variation
         local pitch = math.random(100, 150) / 100
         SFXManager():Play(uwuSound, 2.0, 0, false, pitch)
-        
+
         -- Generate a random number between 1 and 3
         local numFans = math.random(1, 3)
-        
+
         for i = 1, numFans do
             local fanType
             if math.random() <= 0.8 then
@@ -1052,7 +965,7 @@ function MyMod:OnPlayerDamage(entity, amount, flag, source, countdown)
             else
                 fanType = EntityType.ENTITY_FATTY  -- 20% chance to spawn a Fatty
             end
-            
+
             local fan = Isaac.Spawn(fanType, 0, 0, player.Position, Vector.Zero, player)
             if fan and fan:Exists() then
                 fan:AddCharmed(EntityRef(player), -1) -- Charm the fan
@@ -1063,10 +976,10 @@ function MyMod:OnPlayerDamage(entity, amount, flag, source, countdown)
 end
 
 -- Callback to stop the default grunt sound when taking damage
-function MyMod:StopDefaultGrunt()
+function Grenneh:StopDefaultGrunt()
     local player = Isaac.GetPlayer(0)
     if not player or not player:Exists() then return end  -- Ensure player exists
-    
+
     if player:HasCollectible(grennettesWig) then
         if SFXManager():IsPlaying(SoundEffect.SOUND_ISAAC_HURT_GRUNT) then
             SFXManager():Stop(SoundEffect.SOUND_ISAAC_HURT_GRUNT)
@@ -1078,9 +991,9 @@ function MyMod:StopDefaultGrunt()
 end
 
 -- Callback for handling new room events
-function MyMod:OnWigNewRoom()
+function Grenneh:OnWigNewRoom()
     local entities = Isaac.GetRoomEntities()
-    
+
     for _, entity in ipairs(entities) do
         if entity:GetData().isGrennetteFan then
             entity:Remove() -- Despawn the fan when entering a new room
@@ -1089,9 +1002,9 @@ function MyMod:OnWigNewRoom()
 end
 
 -- Callback to put the wig costume on the player
-function MyMod:PutWigOn(player)
+function Grenneh:PutWigOn(player)
     if not player or not player:Exists() then return end  -- Ensure player exists
-    
+
     if player:HasCollectible(grennettesWig) and not wigOn then
         player:AddNullCostume(grennettewigCostume)
         wigOn = true
@@ -1099,23 +1012,23 @@ function MyMod:PutWigOn(player)
 end
 
 -- Wrapper for PutWigOn with SafeCall
-function MyMod:PutWigOnSafe(player)
-    grennettesWigSafeCall(MyMod.PutWigOn, MyMod, player)
+function Grenneh:PutWigOnSafe(player)
+    grennettesWigSafeCall(Grenneh.PutWigOn, Grenneh, player)
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, MyMod.PutWigOnSafe)
+Grenneh:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, Grenneh.PutWigOnSafe)
 
 -- Register the callbacks
-MyMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, entity, amount, flag, source, countdown)
-    grennettesWigSafeCall(MyMod.OnPlayerDamage, MyMod, entity, amount, flag, source, countdown)
+Grenneh:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, entity, amount, flag, source, countdown)
+    grennettesWigSafeCall(Grenneh.OnPlayerDamage, Grenneh, entity, amount, flag, source, countdown)
 end, EntityType.ENTITY_PLAYER)
 
-MyMod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
-    grennettesWigSafeCall(MyMod.StopDefaultGrunt, MyMod)
+Grenneh:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+    grennettesWigSafeCall(Grenneh.StopDefaultGrunt, Grenneh)
 end)
 
-MyMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
-    grennettesWigSafeCall(MyMod.OnWigNewRoom, MyMod)
+Grenneh:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+    grennettesWigSafeCall(Grenneh.OnWigNewRoom, Grenneh)
 end)
 
 ----- whippin
@@ -1158,15 +1071,15 @@ local function shuffleTable(t)
 end
 
 -- Function to reset the shuffled pools when the run is rerolled
-function MyMod:ResetShuffle()
+function Grenneh:ResetShuffle()
     shuffledPools = {}
     rerolledRooms = {}
 end
 
 -- Callback to shuffle the item pools when the player picks up the item
-function MyMod:OnWhippinPlayerUpdate(player)
+function Grenneh:OnWhippinPlayerUpdate(player)
     if not player or not player:Exists() then return end  -- Ensure player exists
-    
+
     if not next(shuffledPools) and player:HasCollectible(whippinItem) then
         -- Shuffle the item pools
         shuffledPools = shuffleTable(itemPools)
@@ -1175,16 +1088,16 @@ function MyMod:OnWhippinPlayerUpdate(player)
 end
 
 -- Callback to modify the spawned item based on the shuffled pools
-function MyMod:OnWhippinNewRoom()
+function Grenneh:OnWhippinNewRoom()
     local player = Isaac.GetPlayer(0)
     if not player or not player:Exists() then return end  -- Ensure player exists
 
     if next(shuffledPools) and player:HasCollectible(whippinItem) then
-        local room = Game():GetRoom()
+        local room = Grenneh.game:GetRoom()
         if not room then return end  -- Ensure room exists
-        
+
         local roomSeed = room:GetSpawnSeed()
-        
+
         -- Check if the room has already been rerolled
         if not rerolledRooms[roomSeed] then
             local entities = Isaac.GetRoomEntities()
@@ -1192,20 +1105,20 @@ function MyMod:OnWhippinNewRoom()
                 if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then
                     local pickup = entity:ToPickup()
                     if pickup then
-                        local itemPool = Game():GetItemPool()
+                        local itemPool = Grenneh.game:GetItemPool()
                         if not itemPool then return end  -- Ensure item pool exists
-                        
+
                         -- Get the current item ID on the pedestal
                         local currentItem = pickup.SubType
-                        
+
                         -- Check if the current item is a key item
-                        if MyMod:IsKeyItem(currentItem) then
+                        if Grenneh:IsKeyItem(currentItem) then
                             -- Skip rerolling this item since it's a key item
                             print("Skipping reroll for key item: " .. currentItem)
                         else
                             -- Determine the original pool based on room type
-                            local originalPool = MyMod:GetPoolForRoom(room:GetType())
-                            
+                            local originalPool = Grenneh:GetPoolForRoom(room:GetType())
+
                             -- Reroll the item according to the shuffled pools
                             if originalPool then
                                 local shuffledPool = shuffledPools[table.indexof(itemPools, originalPool)]
@@ -1218,19 +1131,19 @@ function MyMod:OnWhippinNewRoom()
                     end
                 end
             end
-            
+
             -- Mark this room as having been rerolled
             rerolledRooms[roomSeed] = true
         end
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
-    whippinSafeCall(MyMod.OnWhippinNewRoom, MyMod)
+Grenneh:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+    whippinSafeCall(Grenneh.OnWhippinNewRoom, Grenneh)
 end)
 
 -- Utility function to get the pool based on room type
-function MyMod:GetPoolForRoom(roomType)
+function Grenneh:GetPoolForRoom(roomType)
     if roomType == RoomType.ROOM_TREASURE then
         return ItemPoolType.POOL_TREASURE
     elseif roomType == RoomType.ROOM_DEVIL then
@@ -1267,14 +1180,14 @@ function table.indexof(tbl, val)
 end
 
 -- Register the callbacks
-MyMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, player)
-    whippinSafeCall(MyMod.OnWhippinPlayerUpdate, MyMod, player)
+Grenneh:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, player)
+    whippinSafeCall(Grenneh.OnWhippinPlayerUpdate, Grenneh, player)
 end)
 
 
 
-MyMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
-    whippinSafeCall(MyMod.ResetShuffle, MyMod)
+Grenneh:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+    whippinSafeCall(Grenneh.ResetShuffle, Grenneh)
 end)
 
 -- cursed orb
@@ -1293,18 +1206,18 @@ end
 
 -- Function to reroll items based on quality and the specified pool
 local function rerollItemToTargetQuality(pickup, targetPool)
-    local itemPool = Game():GetItemPool()
+    local itemPool = Grenneh.game:GetItemPool()
     local newItem = itemPool:GetCollectible(targetPool, true, pickup.InitSeed)
     local itemConfig = Isaac.GetItemConfig():GetCollectible(newItem)
     local currentQuality = itemConfig.Quality
-    
+
     -- Reroll until item is at least Quality 2
     while currentQuality < 2 do
         newItem = itemPool:GetCollectible(targetPool, true, pickup.InitSeed)
         itemConfig = Isaac.GetItemConfig():GetCollectible(newItem)
         currentQuality = itemConfig.Quality
     end
-    
+
     -- 15% chance to reroll from Quality 2 to 3
     if currentQuality == 2 and math.random() <= 0.15 then
         while currentQuality ~= 3 do
@@ -1313,7 +1226,7 @@ local function rerollItemToTargetQuality(pickup, targetPool)
             currentQuality = itemConfig.Quality
         end
     end
-    
+
     -- 6% chance to reroll from Quality 3 to 4
     if currentQuality == 3 and math.random() <= 0.06 then
         while currentQuality ~= 4 do
@@ -1322,24 +1235,24 @@ local function rerollItemToTargetQuality(pickup, targetPool)
             currentQuality = itemConfig.Quality
         end
     end
-    
+
     return newItem
 end
 
-function MyMod:OnCursedOrbNewRoom()
+function Grenneh:OnCursedOrbNewRoom()
     local player = Isaac.GetPlayer(0)
     if not player or not player:Exists() then return end  -- Ensure player exists
-    
+
     if player:HasCollectible(grennehCursedOrb) then
-        local room = Game():GetRoom()
+        local room = Grenneh.game:GetRoom()
         if not room then return end  -- Ensure room exists
-        
+
         local roomSeed = room:GetSpawnSeed()
-        
+
         -- Check if the room has already been rerolled
         if not rerolledRooms[roomSeed] then
             local roomType = room:GetType()
-            
+
             if roomType == RoomType.ROOM_DEVIL then
                 local entities = Isaac.GetRoomEntities()
                 for _, entity in ipairs(entities) do
@@ -1363,24 +1276,24 @@ function MyMod:OnCursedOrbNewRoom()
                     end
                 end
             end
-            
+
             -- Mark this room as having been rerolled
             rerolledRooms[roomSeed] = true
         end
     end
 end
 
-function MyMod:ResetCursedOrb()
+function Grenneh:ResetCursedOrb()
     rerolledRooms = {}
 end
 
 -- Register the callbacks
-MyMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
-    CursedOrbSafeCall(MyMod.OnCursedOrbNewRoom, MyMod)
+Grenneh:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+    CursedOrbSafeCall(Grenneh.OnCursedOrbNewRoom, Grenneh)
 end)
 
-MyMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
-    CursedOrbSafeCall(MyMod.ResetCursedOrb, MyMod)
+Grenneh:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+    CursedOrbSafeCall(Grenneh.ResetCursedOrb, Grenneh)
 end)
 
 -- Grennette's tucker
@@ -1400,19 +1313,19 @@ local coneAngle = 60
 local puddleDuration = 100
 
 -- Callback function for when the player takes damage
-function MyMod:OnTuckerPlayerDamage(entity, amount, flags, source, countdown)
+function Grenneh:OnTuckerPlayerDamage(entity, amount, flags, source, countdown)
     local player = Isaac.GetPlayer(0)
     if player:HasCollectible(grennettesTucker) then
         -- Chance to release a burst of tears and create a pee puddle
         if math.random() <= burstChance then
-            MyMod:CreatePeePuddle(player)
-            MyMod:ReleaseBurstOfTears(player)
+            Grenneh:CreatePeePuddle(player)
+            Grenneh:ReleaseBurstOfTears(player)
         end
     end
 end
 
 -- Function to create a pee puddle
-function MyMod:CreatePeePuddle(player)
+function Grenneh:CreatePeePuddle(player)
     local playerPos = player.Position
     local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_LEMON_MISHAP, 0, playerPos, Vector(0, 0), player):ToEffect()
     creep.Scale = 0.5  -- Size of the puddle
@@ -1421,11 +1334,11 @@ function MyMod:CreatePeePuddle(player)
 end
 
 -- Function to release a burst of yellow tears behind the player
-function MyMod:ReleaseBurstOfTears(player)
+function Grenneh:ReleaseBurstOfTears(player)
     local playerPos = player.Position
     local moveDir = player:GetMovementDirection()
     local baseAngle = 0
-    
+
     -- Determine the base angle depending on movement direction
     if moveDir == Direction.NO_DIRECTION then
         baseAngle = 90  -- Default to shooting upwards
@@ -1438,16 +1351,16 @@ function MyMod:ReleaseBurstOfTears(player)
     elseif moveDir == Direction.DOWN then
         baseAngle = 270
     end
-    
+
     for i = 1, numTears do
         -- Add randomness to the angle within the cone
         local angleOffset = math.random(-coneAngle / 2, coneAngle / 2)
         local finalAngle = baseAngle + angleOffset
-        
+
         -- Randomize the speed slightly for each tear
         local randomSpeed = math.random(5, 10)
         local tearDirection = Vector.FromAngle(finalAngle):Resized(randomSpeed)
-        
+
         local tear = player:FireTear(playerPos, tearDirection, false, true, false)
         tear.Color = Color(1, 1, 0, 1, 0, 0, 0)  -- Yellow color
         tear.FallingSpeed = -randomSpeed
@@ -1456,16 +1369,16 @@ function MyMod:ReleaseBurstOfTears(player)
         tear.TearFlags = tear.TearFlags | TearFlags.TEAR_SPECTRAL
         tear.Height = -20  -- Adjust to control the range
         tear.FallingSpeed = 0
-        
+
         -- Set the tear damage to 3 times the player's damage
         tear.CollisionDamage = player.Damage * 3
     end
 end
 
 -- Register the callbacks
-MyMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, entity, amount, flags, source, countdown)
+Grenneh:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function(_, entity, amount, flags, source, countdown)
     if entity.Type == EntityType.ENTITY_PLAYER then
-        MyMod:OnTuckerPlayerDamage(entity, amount, flags, source, countdown)
+        Grenneh:OnTuckerPlayerDamage(entity, amount, flags, source, countdown)
     end
 end)
 
@@ -1490,7 +1403,7 @@ local grenetteTransformationItems = {
 }
 
 -- Register item details in the initialization function
-function MyMod:OnGameStart()
+function Grenneh:OnGameStart()
     if EID then
 
         local progress = 0
@@ -1507,19 +1420,19 @@ function MyMod:OnGameStart()
         EID:addCollectible(Isaac.GetItemIdByName("Choix du Chat"), "Teleport to a special room! #{{ColorPurple}}Let the chat decide! #Teleports to a custom room when used.")
 
         -- Grennette items with progress
-        EID:addCollectible(Isaac.GetItemIdByName("Grennette's Mascara"), 
+        EID:addCollectible(Isaac.GetItemIdByName("Grennette's Mascara"),
             "Beautiful rainbow tears! #{{ColorRainbow}}Double damage #Increases tear size #Reduces fire rate #+2 Luck #Smooth transition colors #Charm, piercing, and spectral tears #Tears increase in size on hit." ..
             "#Progress towards Grennette's True Form: {{ColorRed}}" .. progress .. "/3" ..
             "#{{ColorPink}}Grennette's True Form: 20% chance to transform enemies into heart pickups when taking contact damage."
         )
-        EID:addCollectible(Isaac.GetItemIdByName("Grennette's Wig"), 
+        EID:addCollectible(Isaac.GetItemIdByName("Grennette's Wig"),
             "Grennette's wig! #{{ColorPink}}UwU #Spawn 1 to 3 fans when hit, 80% chance to be a Gaper, 20% chance to be a Fatty #{{Warning}} {{ColorYellow}}Fans are charmed and despawn when entering a new room." ..
-            "#Progress towards Grennette's True Form: {{ColorRed}}" .. progress .. "/3" .. 
+            "#Progress towards Grennette's True Form: {{ColorRed}}" .. progress .. "/3" ..
             "#{{ColorPink}}Grennette's True Form: 20% chance to transform enemies into heart pickups when taking contact damage."
         )
-        EID:addCollectible(Isaac.GetItemIdByName("Grennette's Tucker"), 
+        EID:addCollectible(Isaac.GetItemIdByName("Grennette's Tucker"),
             "Grennette's Tucker! #{{ColorYellow}} 15% Chance to release a burst of tears and create a pee puddle when taking damage." ..
-            "#Progress towards Grennette's True Form: {{ColorRed}}" .. progress .. "/3" .. 
+            "#Progress towards Grennette's True Form: {{ColorRed}}" .. progress .. "/3" ..
             "#{{ColorPink}}Grennette's True Form: 20% chance to transform enemies into heart pickups when taking contact damage."
         )
 
@@ -1529,7 +1442,7 @@ function MyMod:OnGameStart()
     end
 end
 
-MyMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, MyMod.OnGameStart)
+Grenneh:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, Grenneh.OnGameStart)
 
 -- transformation
 
@@ -1554,19 +1467,19 @@ local function checkForGrennetteTransformation(player)
 
             -- Update the progress for the item in the EID description
             if EID then
-                EID:addCollectible(Isaac.GetItemIdByName("Grennette's Mascara"), 
+                EID:addCollectible(Isaac.GetItemIdByName("Grennette's Mascara"),
                 "Beautiful rainbow tears! #{{ColorRainbow}}Double damage #Increases tear size #Reduces fire rate #+2 Luck #Smooth transition colors #Charm, piercing, and spectral tears #Tears increase in size on hit." ..
-                "#Progress towards Grennette's True Form: " .. color .. itemCount .. "/3" .. 
+                "#Progress towards Grennette's True Form: " .. color .. itemCount .. "/3" ..
                 "#{{ColorPink}}Grennette's True Form: 20% chance to transform enemies into heart pickups when taking contact damage."
              )
-            EID:addCollectible(Isaac.GetItemIdByName("Grennette's Wig"), 
+            EID:addCollectible(Isaac.GetItemIdByName("Grennette's Wig"),
                 "Grennette's wig! #{{ColorPink}}UwU #Spawn 1 to 3 fans when hit, 80% chance to be a Gaper, 20% chance to be a Fatty #{{Warning}} {{ColorYellow}}Fans are charmed and despawn when entering a new room." ..
-                "#Progress towards Grennette's True Form: " .. color .. itemCount .. "/3" .. 
+                "#Progress towards Grennette's True Form: " .. color .. itemCount .. "/3" ..
                 "#{{ColorPink}}Grennette's True Form: 20% chance to transform enemies into heart pickups when taking contact damage."
             )
-            EID:addCollectible(Isaac.GetItemIdByName("Grennette's Tucker"), 
+            EID:addCollectible(Isaac.GetItemIdByName("Grennette's Tucker"),
                 "Grennette's Tucker! #{{ColorYellow}} 15% Chance to release a burst of tears and create a pee puddle when taking damage." ..
-                "#Progress towards Grennette's True Form: " .. color .. itemCount .. "/3" .. 
+                "#Progress towards Grennette's True Form: " .. color .. itemCount .. "/3" ..
                 "#{{ColorPink}}Grennette's True Form: 20% chance to transform enemies into heart pickups when taking contact damage."
             )
             end
@@ -1577,7 +1490,7 @@ local function checkForGrennetteTransformation(player)
 
     if itemCount >= 3 and not transformed then
         transformed = true
-        Game():GetHUD():ShowItemText("Grennette's True Form!")
+        Grenneh.game:GetHUD():ShowItemText("Grennette's True Form!")
         -- play the transformation sound
         SFXManager():Play(transformationSound, 1.0, 0, false, 1.0)
     end
@@ -1613,6 +1526,6 @@ end
 
 
 -- Register callbacks for transformation and damage event
-MyMod:AddCallback(ModCallbacks.MC_POST_UPDATE, onTransfoGameUpdate)
-MyMod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, onTransfoPlayerDamage, EntityType.ENTITY_PLAYER)
-MyMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, onTransfoNewGame)
+Grenneh:AddCallback(ModCallbacks.MC_POST_UPDATE, onTransfoGameUpdate)
+Grenneh:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, onTransfoPlayerDamage, EntityType.ENTITY_PLAYER)
+Grenneh:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, onTransfoNewGame)

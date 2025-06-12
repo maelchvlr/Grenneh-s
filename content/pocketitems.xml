@@ -1,4 +1,5 @@
 <pocketitems>
-    <pilleffect name="Skill Issue"/>
+    <!-- Skill Issue don't work ? I cannot make it spawn -->
+    <pilleffect name="Skill Issue" description="idk" class="0" mimiccharge="5" />
     <pilleffect name="Cérémonie de Contemplation de la Lune"/>
 </pocketitems>

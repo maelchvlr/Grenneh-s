@@ -21,8 +21,4 @@
     <passive id="14" name="Whippin" gfx="whippin.png" description="Allez hop, whippin les items pools" quality="1"/>
     <passive id="15" name="Grenneh's Cursed Orb" gfx="grennehorb.png" description="Inversons la tendance, et rendons la meilleure" quality="4"/>
     <passive id="16" name="Grennette's Tucker" gfx="grennettetucker.png" description="L'art de l'illusion" quality="0"/>
-
-
-
-
 </items>
