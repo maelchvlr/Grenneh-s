@@ -11,36 +11,9 @@ include("scripts/init")
 include("scripts/pills")
 
 include("scripts/grenneh")
+include("scripts/items")
 
 
--- #region Mimine
-
-local mimineItemId = Isaac.GetItemIdByName("Mimine")
-local mimineLuckPerItem = 1
-
--- Safely execute a function and catch any errors
-local function MimineSafeCall(func, ...)
-    local success, err = pcall(func, ...)
-    if not success then
-        Isaac.ConsoleOutput("Error in Mimine: " .. tostring(err) .. "\n")
-    end
-end
-
--- Evaluate Mimine's luck bonus effect
-function Grenneh:EvaluateMimineCache(player, cacheFlags)
-    if cacheFlags & CacheFlag.CACHE_LUCK == CacheFlag.CACHE_LUCK then
-        local mimineItemCount = player:GetCollectibleNum(mimineItemId)
-        local totalLuckToAdd = mimineLuckPerItem * mimineItemCount
-        player.Luck = player.Luck + totalLuckToAdd
-    end
-end
-
--- Wrapper for EvaluateMimineCache with SafeCall
-function Grenneh:EvaluateMimineCacheSafe(player, cacheFlags)
-    MimineSafeCall(Grenneh.EvaluateMimineCache, Grenneh, player, cacheFlags)
-end
-
-Grenneh:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Grenneh.EvaluateMimineCacheSafe)
 
 -- List of all Guppy item IDs
 local guppyItemIds = {

@@ -10,7 +10,8 @@ local function GrennehSafeCall(func, ...)
 end
 
 -- #endregion
--- #region init Grenneh
+-- #region init Grenneh & Grennette
+-- TODO Move the function to init.lua if grennette hasn't it own class
 
 ---@param player EntityPlayer
 function Grenneh:OnPlayerInit(player)
