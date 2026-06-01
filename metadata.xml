@@ -1,15 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>Grenneh's</name>
+    <name>TXSSA'S</name>
     <directory>grenneh's</directory>
     <id>3114706443</id>
-    <description>Béta du mod Grenneh's, fais pour le streamer du même nom, au programme deux personnages (Un qui arrive), 16 items, 2 pillules, quelques petites surprises, et une transformation.
+    <description>TXSSA'S est un mod fait pour la streameuse du même nom.
+
+Contenu :
+- 2 personnages jouables : Grenneh (dispo) et Grennette (WIP).
+- 16 objets.
+- 2 pilules.
+- Une transformation Grennette.
+- Une salle spéciale liée au Choix du Chat.
+- Quelques surprises sonores et effets chaotiques.
+
+Objets :
+- Mimine : +1 chance et 8% de chance, à la première entrée dans une salle, de transformer un piédestal valide en objet Guppy non déjà vu pendant la run.
+- BMTH ! : gros gain de dégâts, larmes rouges et flaques de sang derrière le personnage en mouvement.
+- Gaming Chair : bonus de vitesse de déplacement.
+- Tatanosaurus : ajoute 2 coeurs rouges pleins à chaque exemplaire ramassé.
+- A Bo'oh'o'wa'er : augmente la cadence de tir.
+- Redbull : donne le vol, augmente la vitesse jusqu'à 2.
+- Grenneh's bean : joue un son de pet à l'utilisation.
+- Head of Kramptus : ressemble presque à un certain objet connu. Presque.
+- Monster : objet évolutif. Chaque exemplaire ajoute un effet : dégâts, vitesse, cadence, dégâts subis doublés, larmes vertes empoisonnées parfois incontrôlables, contrôles inversés occasionnels, puis un sixième exemplaire déclenche une overdose qui désactive les mauvais effets.
+- Choix du Chat : téléporte dans une salle de choix spéciale. Prendre un objet supprime les autres piédestaux.
+- Grennette's Mascara : dégâts x2, +2 chance, larmes arc-en-ciel charmantes, spectrales et perforantes, larmes plus grosses qui grandissent au contact. Compte pour la transformation Grennette.
+- La Contemplation : supprime un objet non essentiel au hasard et téléporte au Planétarium.
+- Grennette's Wig : quand le personnage prend un dégât, joue un son uwu et invoque 1 à 3 fans charmés jusqu'à la prochaine salle. Compte pour la transformation Grennette.
+- Whippin : mélange l'association des pools d'objets aux types de salles sans vider les pools. Fonctionne aussi sur les piédestaux reroll.
+- Grenneh's Cursed Orb : échange les pools Angel et Devil, y compris sur les piédestaux reroll, avec des objets au moins qualité 2.
+- Grennette's Tucker : en prenant un dégât, chance de créer une flaque de citron et de tirer une rafale de larmes jaunes spectrales. Compte pour la transformation Grennette.
+
+Pilules :
+- Skill Issue : compte comme un dégât rouge pour l'étage et joue le son Skill Issue.
+- Cérémonie de Contemplation de la Lune : pour le reste de l'étage, donne de la cadence, applique Curse of Darkness, double les ennemis, les boss, les pickups et les récompenses de salle. Ne fait rien dans les boutiques.
+
+Transformation :
+- Grennette's True Form se déclenche avec Grennette's Mascara, Grennette's Wig et Grennette's Tucker. Une fois active, prendre un dégât a une chance de transformer un ennemi non-boss proche en coeur.
+
+Les rerolls du mod évitent les objets clés et essaient de ne pas reproposer des objets déjà vus pendant la run.
 
 Un grand merci aux viewers pour leur participation, à Tatanosaurus pour les sprites, et à @leeloogee sur twitch pour le sprite de Tatano.
 
 PS: je HAIS l'api d'isaac.
-</description>
-    <version>1.31</version>
+
+----------
+English
+----------
+
+Grenneh's is a mod made for the streamer of the same name.
+
+Content:
+- 2 playable characters: Grenneh (available) and Grennette (WIP).
+- 16 items.
+- 2 pills.
+- One Grennette transformation.
+- A special room tied to Choix du Chat.
+- A few sound surprises and chaotic effects.
+
+Items:
+- Mimine: +1 luck and an 8% chance, on first room entry, to turn a valid pedestal into an unseen Guppy item for the run.
+- BMTH !: big damage up, red tears and red creep behind the moving character.
+- Gaming Chair: movement speed up.
+- Tatanosaurus: adds 2 full red hearts for every copy picked up.
+- A Bo'oh'o'wa'er: fire rate up.
+- Redbull: grants flight, raises speed to 2.
+- Grenneh's bean: plays a fart sound on use.
+- Head of Kramptus: looks almost like a certain familiar item. Almost.
+- Monster: evolving item. Each copy adds an effect: damage, speed, fire rate, doubled incoming damage, green poison tears that can go wild, occasional inverted controls, then the sixth copy triggers an overdose that disables the bad effects.
+- Choix du Chat: teleports to a special choice room. Taking one item removes the other pedestals.
+- Grennette's Mascara: x2 damage, +2 luck, rainbow charming spectral piercing tears, larger tears that grow on hit. Counts toward Grennette's transformation.
+- La Contemplation: removes a random non-essential item and teleports to the Planetarium.
+- Grennette's Wig: when hit, plays an uwu sound and summons 1 to 3 charmed fans until the next room. Counts toward Grennette's transformation.
+- Whippin: shuffles item-pool assignments between room types without emptying pools. Also works on rerolled pedestals.
+- Grenneh's Cursed Orb: swaps Angel and Devil pools, including rerolled pedestals, with items at least quality 2.
+- Grennette's Tucker: when hit, has a chance to create lemon creep and fire a burst of yellow spectral tears. Counts toward Grennette's transformation.
+
+Pills:
+- Skill Issue: counts as red heart damage for the floor and plays the Skill Issue sound.
+- Cérémonie de Contemplation de la Lune: for the rest of the floor, gives fire rate, applies Curse of Darkness, doubles enemies, bosses, pickups and room-clear rewards. Does nothing in shops.
+
+Transformation:
+- Grennette's True Form triggers with Grennette's Mascara, Grennette's Wig and Grennette's Tucker. Once active, taking damage has a chance to turn a nearby non-boss enemy into a heart.
+
+The mod's rerolls avoid key items and try not to show items already seen during the run.</description>
+    <version>1.35</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
